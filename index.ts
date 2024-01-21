@@ -1,14 +1,16 @@
-import express, {Express} from "express"
+import express, {Application, NextFunction, Request, Response} from "express"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import dotenv from "dotenv"
 import cors from "cors"
 
 import {sendResponseMiddleware} from "./src/utils"
+import { SendResponse } from "./src/types"
+import router from "./src/routes"
 
 dotenv.config()
 
-const app: Express = express()
+const app: Application = express()
 const port = process.env.PORT || 3000
 
 app.use(cors({ origin: process.env.FRONTEND_URL}))
@@ -21,8 +23,11 @@ mongoose.connection.on("error", (err)=> {
     console.log(err)
 })
 
-app.use(sendResponseMiddleware)
+app.use((req: Request, res: Response, next: NextFunction) => {
+    sendResponseMiddleware(req, res as SendResponse, next)
+})
 
+app.use(router)
 
 
 app.listen(port, () => {
