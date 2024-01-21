@@ -4,7 +4,7 @@ import bodyParser from "body-parser"
 import dotenv from "dotenv"
 import cors from "cors"
 
-import {sendResponseMiddleware} from "./src/utils"
+import {authMiddleware, sendResponseMiddleware} from "./src/utils"
 import { SendResponse } from "./src/types"
 import router from "./src/routes"
 
@@ -25,6 +25,10 @@ mongoose.connection.on("error", (err)=> {
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     sendResponseMiddleware(req, res as SendResponse, next)
+})
+
+app.use("/todo", (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware(req, res as SendResponse, next)
 })
 
 app.use(router)

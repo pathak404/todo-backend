@@ -2,7 +2,7 @@ import {Response} from "express"
 import {Document} from "mongoose"
 
 export interface SendResponse extends Response {
-    sendResponse(data: Object, statusCode: number): void
+    sendResponse(data: Object, statusCode?: number): void
 }
 
 export interface TodoDocument extends Document {
