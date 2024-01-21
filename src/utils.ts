@@ -16,7 +16,9 @@ export const authMiddleware = (req: Request, res: SendResponse, next: NextFuncti
     const authorization: string | undefined = req.get("Authorization")
     if(authorization){
         const token = authorization.split(" ")[1]
-        if(verifyJWT(token)){
+        const payload = verifyJWT(token) as { userId: string }
+        if(payload){
+            req.body.userId = payload.userId
             next()
         }else{
             res.sendResponse({message: "Token expired, Please login again"}, 401)
